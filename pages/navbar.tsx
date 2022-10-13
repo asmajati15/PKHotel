@@ -17,7 +17,7 @@ const Navbar = () => {
                 {/* <a href="#" className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">
                     Dashboard
                   </a> */}
-                <a href="#" className="text-gray-500 hover:text-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-bold">
+                <a href="/" className="text-gray-500 hover:text-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-bold">
                   Home
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-800 hover:text-white px-3 py-2 rounded-md text-sm font-bold">
@@ -29,7 +29,7 @@ const Navbar = () => {
                 <a href="#" className="text-gray-500 hover:text-gray-800 hover:text-white px-3 py-2 mr-4 rounded-md text-sm font-bold">
                   Resto
                 </a>
-                <a href="#" className="bg-[#7D74BE] text-white hover:bg-[#393E72] hover:text-white px-3 py-2 rounded-md text-sm font-bold">
+                <a href="login" className="bg-[#7D74BE] text-white hover:bg-[#393E72] hover:text-white px-3 py-2 rounded-md text-sm font-bold">
                   Login
                 </a>
               </div>
