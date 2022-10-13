@@ -3,18 +3,25 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Navbar from './navbar';
 import Footer from './footer';
+import Link from 'next/link';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import Router, { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
+  const router = useRouter;
+  const [room, setRoom] = useState<any[]>([]);
+  const apiEndPoint = 'http://127.0.0.1:8000/api/room';
+  useEffect(() => {
+    const getRoom = async () => {
+      const { data: res } = await axios.get(apiEndPoint);
+      setRoom(res.data);
+    };
+    getRoom();
+  }, []);
+
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div className="min-h-full bg-grey-500">
         <Navbar></Navbar>
         <main className="mt-20">
@@ -78,98 +85,33 @@ const Home: NextPage = () => {
           <div className="rooms text-center py-10">
             <h2 className="text-4xl font-bold">Our Rooms</h2>
             <div className="grid grid-cols-3 gap-3 mx-auto justify-items-center w-4/5 my-5 text-left">
-              <div className="mx-4 max-w-xs my-3 bg-white rounded-lg border border-gray-200 drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
-                <img className="rounded-t-lg" src="rooms.jpg" alt="" />
-                <div className="flex p-5 justify-around items-center">
-                  <div>
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Exclusive Room</h5>
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-[#5D549E] dark:text-white">$60</h5>
-                  </div>
-                  <div>
-                    <a
-                      href="#"
-                      className="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-[#7D74BE] rounded-lg hover:bg-[#393E72] focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      <svg aria-hidden="true" className="-mt-1 -ml-2 -w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fillRule="evenodd"
-                          d="M9 17.898C9 18.972 10.2649 19.546 11.0731 18.8388L17.3838 13.3169C18.1806 12.6197 18.1806 11.3801 17.3838 10.6829L11.0731 5.16108C10.2649 4.45388 9 5.02785 9 6.1018V17.898Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="mx-4 max-w-xs my-3 bg-white rounded-lg border border-gray-200 drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
-                <img className="rounded-t-lg" src="rooms.jpg" alt="" />
-                <div className="flex p-5 justify-around items-center">
-                  <div>
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Exclusive Room</h5>
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-[#5D549E] dark:text-white">$60</h5>
-                  </div>
-                  <div>
-                    <a
-                      href="#"
-                      className="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-[#7D74BE] rounded-lg hover:bg-[#393E72] focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      <svg aria-hidden="true" className="-mt-1 -ml-2 -w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fillRule="evenodd"
-                          d="M9 17.898C9 18.972 10.2649 19.546 11.0731 18.8388L17.3838 13.3169C18.1806 12.6197 18.1806 11.3801 17.3838 10.6829L11.0731 5.16108C10.2649 4.45388 9 5.02785 9 6.1018V17.898Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </a>
+              {room.map((data) => (
+                <div className="mx-4 max-w-xs my-3 bg-white rounded-lg border border-gray-200 drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
+                  <img className="rounded-t-lg" src="rooms.jpg" alt="" />
+                  <div className="flex p-5 justify-around items-center">
+                    <div>
+                      <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{data.type}</h5>
+                      <h5 className="mb-2 text-xl font-bold tracking-tight text-[#5D549E] dark:text-white">{data.price}</h5>
+                    </div>
+                    <div>
+                      <Link href={{ pathname: '/detail', query: { id: data.id } }}>
+                        <a
+                          href="#"
+                          className="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-[#7D74BE] rounded-lg hover:bg-[#393E72] focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        >
+                          <svg aria-hidden="true" className="-mt-1 -ml-2 -w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              fillRule="evenodd"
+                              d="M9 17.898C9 18.972 10.2649 19.546 11.0731 18.8388L17.3838 13.3169C18.1806 12.6197 18.1806 11.3801 17.3838 10.6829L11.0731 5.16108C10.2649 4.45388 9 5.02785 9 6.1018V17.898Z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </a>
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="mx-4 max-w-xs my-3 bg-white rounded-lg border border-gray-200 drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
-                <img className="rounded-t-lg" src="rooms.jpg" alt="" />
-                <div className="flex p-5 justify-around items-center">
-                  <div>
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Exclusive Room</h5>
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-[#5D549E] dark:text-white">$60</h5>
-                  </div>
-                  <div>
-                    <a
-                      href="#"
-                      className="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-[#7D74BE] rounded-lg hover:bg-[#393E72] focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      <svg aria-hidden="true" className="-mt-1 -ml-2 -w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fillRule="evenodd"
-                          d="M9 17.898C9 18.972 10.2649 19.546 11.0731 18.8388L17.3838 13.3169C18.1806 12.6197 18.1806 11.3801 17.3838 10.6829L11.0731 5.16108C10.2649 4.45388 9 5.02785 9 6.1018V17.898Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="mx-4 max-w-xs my-3 bg-white rounded-lg border border-gray-200 drop-shadow-xl dark:bg-gray-800 dark:border-gray-700">
-                <img className="rounded-t-lg" src="rooms.jpg" alt="" />
-                <div className="flex p-5 justify-around items-center">
-                  <div>
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Exclusive Room</h5>
-                    <h5 className="mb-2 text-xl font-bold tracking-tight text-[#5D549E] dark:text-white">$60</h5>
-                  </div>
-                  <div>
-                    <a
-                      href="#"
-                      className="inline-flex items-center py-2 px-3 text-sm font-medium text-center text-white bg-[#7D74BE] rounded-lg hover:bg-[#393E72] focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      <svg aria-hidden="true" className="-mt-1 -ml-2 -w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fillRule="evenodd"
-                          d="M9 17.898C9 18.972 10.2649 19.546 11.0731 18.8388L17.3838 13.3169C18.1806 12.6197 18.1806 11.3801 17.3838 10.6829L11.0731 5.16108C10.2649 4.45388 9 5.02785 9 6.1018V17.898Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
           <div className="facilites">
