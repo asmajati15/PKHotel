@@ -1,6 +1,65 @@
 // import '../styles/globals.css';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/auth.module.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router';
+import nookies from 'nookies';
+import { parseCookies, setCookie } from 'nookies';
+import Link from 'next/link';
+import { apiUrl } from '../config/config';
 
 const Login = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const router = useRouter();
+
+  const submitHandler = async (event: any) => {
+    event.preventDefault();
+    var res = await axios
+      .post(apiUrl + '/api/login', {
+        email: email,
+        password: password,
+      })
+      .then(function (res) {
+        if (res.status === 200) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Login Successfully !',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+          // localStorage.setItem("user", JSON.stringify(res.data));
+          setCookie(null, 'user', JSON.stringify(res.data), {
+            maxAge: 3600,
+          });
+
+          router.push({ pathname: '/' });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      })
+      .catch(function (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+  };
   return (
     <>
       <section className="h-screen">
@@ -11,7 +70,7 @@ const Login = () => {
                 <h2 className="text-4xl font-bold mb-6">Log in</h2>
                 <p className="text">Welcome! please fill in your credentials to continue</p>
               </div>
-              <form>
+              <form onSubmit={submitHandler}>
                 {/* Email input */}
                 <div className="mb-6">
                   <p className="text mb-3">Email</p>
@@ -19,6 +78,7 @@ const Login = () => {
                     type="text"
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-xl transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-[#7D74BE] focus:outline-none"
                     placeholder="youremail@address.com"
+                    onChange={(event) => setEmail(event.target.value)}
                   />
                 </div>
                 {/* Password input */}
@@ -28,6 +88,7 @@ const Login = () => {
                     type="password"
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded-xl transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-[#7D74BE] focus:outline-none"
                     placeholder="password"
+                    onChange={(event) => setPassword(event.target.value)}
                   />
                 </div>
                 {/* Submit button */}

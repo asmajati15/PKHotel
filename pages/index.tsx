@@ -7,11 +7,12 @@ import Link from 'next/link';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Router, { useRouter } from 'next/router';
+import { appUrl, apiUrl } from '../config/config';
 
 const Home: NextPage = () => {
-  const router = useRouter;
+  // const router = useRouter;
   const [room, setRoom] = useState<any[]>([]);
-  const apiEndPoint = 'http://127.0.0.1:8000/api/room';
+  const apiEndPoint = apiUrl + '/api/room';
   useEffect(() => {
     const getRoom = async () => {
       const { data: res } = await axios.get(apiEndPoint);
